@@ -1,0 +1,57 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+
+package model {
+  enum WeightUnit {
+    Kilogram
+    Pound
+  }
+  class Planet <<struct>> {
+    +name: wstring
+    +gravity: double
+  }
+  interface IModelListener {
+    +modelChanged(model: const PlanetWeightModel&)
+  }
+  class PlanetWeightModel {
+    -listeners_: vector<IModelListener*>
+    -weight_: double
+    -unit_: WeightUnit
+    -weightKg_: double
+    +addListener(l: IModelListener*)
+    +calculate(weight: double, unit: WeightUnit)
+    -fireModelChanged()
+    +weightOn(p: const Planet&): double
+    +weightKgOn(p: const Planet&): double
+    +forceOn(p: const Planet&): double
+  }
+}
+
+package view {
+  class MainWindow {
+    -lastInput_: optional<InputData>
+    +setInputAction(action: function<void()>)
+    +showError(message: wstring)
+    +modelChanged(model: const PlanetWeightModel&)
+  }
+  class InputDialog {
+    +{static} show(owner, initial): optional<InputData>
+  }
+}
+
+package controller {
+  class WeightController {
+    -onInputData()
+    +{static} parseWeight(text: wstring): double
+  }
+}
+
+PlanetWeightModel o-- "*" IModelListener
+PlanetWeightModel --> WeightUnit
+PlanetWeightModel ..> Planet : рассчитывает
+MainWindow ..|> IModelListener
+WeightController --> PlanetWeightModel : изменяет
+WeightController --> MainWindow
+WeightController ..> InputDialog : открывает
+@enduml
