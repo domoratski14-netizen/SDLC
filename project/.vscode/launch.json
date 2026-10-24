@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Отладка (gdb)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/PlanetWeight.exe",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb.exe",
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "preLaunchTask": "Сборка (g++)"
+        }
+    ]
+}
